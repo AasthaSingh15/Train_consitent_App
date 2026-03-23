@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 public class TrainConsitentApp {
     public static void main(String[] args) {
@@ -86,7 +87,7 @@ public class TrainConsitentApp {
         // Insert Pantry at index 2
         linkedTrain.add(2, "Pantry Car");
 
-        System.out.println("\nAfter Inserting Pantry  Car at position 2:");
+        System.out.println("\nAfter inserting Pantry Car at position 2:");
         System.out.println(linkedTrain);
 
         // Remove first and last
@@ -96,6 +97,29 @@ public class TrainConsitentApp {
         System.out.println("\nAfter removing first and last bogie:");
         System.out.println(linkedTrain);
 
+        System.out.println("\nFinal Train Consist:");
+        System.out.println(linkedTrain);
 
+        // =========================
+        // UC5 - Preserve Insertion Order of Bogies
+        // =========================
+        System.out.println("\n=================================");
+        System.out.println("UC5 - Preserve Insertion Order of Bogies");
+        System.out.println("=================================");
+
+        Set<String> trainFormation = new LinkedHashSet<>();
+
+        // Add bogies
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
+
+        // Attempt duplicate
+        trainFormation.add("Sleeper"); // Duplicate ignored
+
+        // Display final formation
+        System.out.println("Final Train Formation:");
+        System.out.println(trainFormation);
     }
 }
