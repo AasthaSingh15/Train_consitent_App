@@ -25,16 +25,13 @@ public class TrainConsitentApp {
         }
     }
 
-    // =========================
     // UC14 - Custom Exception
-    // =========================
     static class InvalidCapacityException extends Exception {
         public InvalidCapacityException(String message) {
             super(message);
         }
     }
 
-    // Passenger Bogie with validation
     static class PassengerBogie {
         String type;
         int capacity;
@@ -48,41 +45,50 @@ public class TrainConsitentApp {
         }
     }
 
+    // UC15 - Runtime Exception
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
+            super(message);
+        }
+    }
+
+    static class GoodsBogieUC15 {
+        String shape;
+        String cargo;
+
+        GoodsBogieUC15(String shape) {
+            this.shape = shape;
+        }
+
+        void assignCargo(String cargo) {
+            try {
+                if (shape.equalsIgnoreCase("Rectangular") &&
+                        cargo.equalsIgnoreCase("Petroleum")) {
+                    throw new CargoSafetyException("Unsafe cargo assignment!");
+                }
+
+                this.cargo = cargo;
+                System.out.println("\nCargo assigned successfully -> " + cargo);
+
+            } catch (CargoSafetyException e) {
+                System.out.println("\nError: " + e.getMessage());
+
+            } finally {
+                System.out.println("Cargo validation completed for " + shape + " bogie");
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         System.out.println("===================================");
         System.out.println(" === Train Consist Management App === ");
         System.out.println("===================================");
 
-        // UC1
+        // UC1–UC6 (basic collections)
         List<String> trainConsist = new ArrayList<>();
-        System.out.println("\nTrain initialized successfully...");
-        System.out.println("Initial bogie count: " + trainConsist.size());
-
-        // UC2
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
-        trainConsist.add("First Class");
-
-        // UC3
-        Set<String> bogieIds = new HashSet<>();
-        bogieIds.add("BG101");
-        bogieIds.add("BG102");
-
-        // UC4
-        LinkedList<String> linkedTrain = new LinkedList<>();
-        linkedTrain.add("Engine");
-        linkedTrain.add("Sleeper");
-
-        // UC5
-        Set<String> formation = new LinkedHashSet<>();
-        formation.add("Engine");
-        formation.add("Sleeper");
-
-        // UC6
-        Map<String, Integer> capacityMap = new HashMap<>();
-        capacityMap.put("Sleeper", 72);
-        capacityMap.put("AC Chair", 56);
 
         // UC7 - Sorting
         List<Bogie> bogies = new ArrayList<>();
@@ -91,80 +97,75 @@ public class TrainConsitentApp {
         bogies.add(new Bogie("First Class", 24));
         bogies.add(new Bogie("General", 90));
 
-        bogies.sort((b1, b2) -> Integer.compare(b1.capacity, b2.capacity));
+        bogies.sort((a, b) -> a.capacity - b.capacity);
 
-        // UC8 - Filtering
+        // UC8 - Filter
         List<Bogie> filtered = bogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
 
-        // UC9 - Grouping
-        List<Bogie> bogiesUC9 = new ArrayList<>();
-        bogiesUC9.add(new Bogie("Sleeper", 72));
-        bogiesUC9.add(new Bogie("AC Chair", 56));
-        bogiesUC9.add(new Bogie("First Class", 24));
-        bogiesUC9.add(new Bogie("Sleeper", 70));
-
+        // UC9 - Group
         Map<String, List<Bogie>> grouped =
-                bogiesUC9.stream()
-                        .collect(Collectors.groupingBy(b -> b.name));
+                bogies.stream().collect(Collectors.groupingBy(b -> b.name));
 
         // UC10 - Reduce
-        int totalSeats = bogiesUC9.stream()
+        int total = bogies.stream()
                 .map(b -> b.capacity)
                 .reduce(0, Integer::sum);
 
         // UC11 - Regex
-        Scanner scanner = new Scanner(System.in);
-        String trainId = "TRN-1234"; // simplified for run
+        String trainId = "TRN-1234";
         String cargoCode = "PET-AB";
 
-        boolean isTrainValid = trainId.matches("TRN-\\d{4}");
-        boolean isCargoValid = cargoCode.matches("PET-[A-Z]{2}");
+        boolean validTrain = trainId.matches("TRN-\\d{4}");
+        boolean validCargo = cargoCode.matches("PET-[A-Z]{2}");
 
         // UC12 - Safety
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));
+        List<GoodsBogie> goods = new ArrayList<>();
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goods.add(new GoodsBogie("Cylindrical", "Coal"));
 
-        boolean isSafe = goodsBogies.stream()
-                .allMatch(g ->
-                        !g.type.equalsIgnoreCase("Cylindrical")
-                                || g.cargo.equalsIgnoreCase("Petroleum"));
+        boolean safe = goods.stream().allMatch(g ->
+                !g.type.equalsIgnoreCase("Cylindrical")
+                        || g.cargo.equalsIgnoreCase("Petroleum"));
 
         // UC13 - Performance
-        List<Bogie> testBogies = new ArrayList<>();
+        List<Bogie> test = new ArrayList<>();
         for (int i = 0; i < 100000; i++) {
-            testBogies.add(new Bogie("Type" + i, i % 100));
+            test.add(new Bogie("T" + i, i % 100));
         }
 
-        long startLoop = System.nanoTime();
-        for (Bogie b : testBogies) {
-            if (b.capacity > 60) { }
+        long t1 = System.nanoTime();
+        for (Bogie b : test) {
+            if (b.capacity > 60) {}
         }
-        long loopTime = System.nanoTime() - startLoop;
+        long loopTime = System.nanoTime() - t1;
 
-        long startStream = System.nanoTime();
-        testBogies.stream().filter(b -> b.capacity > 60).collect(Collectors.toList());
-        long streamTime = System.nanoTime() - startStream;
+        long t2 = System.nanoTime();
+        test.stream().filter(b -> b.capacity > 60).collect(Collectors.toList());
+        long streamTime = System.nanoTime() - t2;
 
-        // =========================
-        // UC14 - Exception Handling
-        // =========================
-        System.out.println("\n=================================");
-        System.out.println("UC14 - Handle Invalid Bogie Capacity");
-        System.out.println("=================================");
-
+        // UC14 - Exception
+        System.out.println("\nUC14 - Handle Invalid Bogie Capacity");
         try {
-            PassengerBogie valid = new PassengerBogie("Sleeper", 72);
-            System.out.println("\nCreated Bogie: " + valid.type + " -> " + valid.capacity);
+            PassengerBogie p1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Created Bogie: " + p1.type + " -> " + p1.capacity);
 
-            PassengerBogie invalid = new PassengerBogie("AC Chair", 0);
+            PassengerBogie p2 = new PassengerBogie("AC", 0);
 
         } catch (InvalidCapacityException e) {
             System.out.println("Error: " + e.getMessage());
         }
 
-        System.out.println("\nUC14 exception handling completed...");
+        // UC15 - Runtime handling
+        System.out.println("\nUC15 - Safe Cargo Assignment");
+
+        GoodsBogieUC15 g1 = new GoodsBogieUC15("Cylindrical");
+        g1.assignCargo("Petroleum");
+
+        GoodsBogieUC15 g2 = new GoodsBogieUC15("Rectangular");
+        g2.assignCargo("Petroleum");
+
+        System.out.println("\nUC15 runtime handling completed...");
     }
 }
