@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TrainConsitentApp {
 
@@ -73,40 +72,13 @@ public class TrainConsitentApp {
         System.out.println("Train Consist Management App");
         System.out.println("===================================");
 
-        // UC7 - Sorting
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("General", 90));
-
-        bogies.sort((a, b) -> a.capacity - b.capacity);
-
-        // UC8 - Filter
-        List<Bogie> filtered = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        // UC9 - Group
-        Map<String, List<Bogie>> grouped =
-                bogies.stream().collect(Collectors.groupingBy(b -> b.name));
-
-        // UC10 - Reduce
-        int total = bogies.stream()
-                .map(b -> b.capacity)
-                .reduce(0, Integer::sum);
-
-        // UC11 - Regex
-        String trainId = "TRN-1234";
-        boolean validTrain = trainId.matches("TRN-\\d{4}");
-
-        // UC12 - Safety
-        List<String> safety = Arrays.asList("Petroleum", "Coal");
-
-        // UC13 - Performance (short)
-        long t1 = System.nanoTime();
-        bogies.stream().filter(b -> b.capacity > 60).collect(Collectors.toList());
-        long t2 = System.nanoTime();
+        // UC7–UC13 (short)
+        List<Bogie> bogies = Arrays.asList(
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 56),
+                new Bogie("First Class", 24),
+                new Bogie("General", 90)
+        );
 
         // UC14
         System.out.println("\nUC14 - Exception Handling");
@@ -127,9 +99,14 @@ public class TrainConsitentApp {
         g2.assignCargo("Petroleum");
 
         // UC16 - Bubble Sort
-        System.out.println("\nUC16 - Bubble Sort");
+        System.out.println("\n=================================");
+        System.out.println("UC16 - Bubble Sort");
+        System.out.println("=================================");
 
         int[] capacities = {72, 56, 24, 70, 60};
+
+        System.out.println("\nOriginal Capacities:");
+        for (int c : capacities) System.out.print(c + " ");
 
         for (int i = 0; i < capacities.length - 1; i++) {
             for (int j = 0; j < capacities.length - i - 1; j++) {
@@ -141,34 +118,32 @@ public class TrainConsitentApp {
             }
         }
 
-        // UC17 - Arrays.sort()
-        System.out.println("\nUC17 - Arrays.sort()");
+        System.out.println("\n\nSorted Capacities:");
+        for (int c : capacities) System.out.print(c + " ");
+
+        // UC17 - Arrays.sort
+        System.out.println("\n\n=================================");
+        System.out.println("UC17 - Arrays.sort()");
+        System.out.println("=================================");
 
         String[] bogieNames = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
 
-        System.out.println("Original: " + Arrays.toString(bogieNames));
-
+        System.out.println("\nOriginal: " + Arrays.toString(bogieNames));
         Arrays.sort(bogieNames);
-
         System.out.println("Sorted: " + Arrays.toString(bogieNames));
 
-        // =========================
         // UC18 - Linear Search
-        // =========================
         System.out.println("\n=================================");
-        System.out.println("UC18 - Linear Search for Bogie ID");
+        System.out.println("UC18 - Linear Search");
         System.out.println("=================================");
 
         String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
         String searchId = "BG309";
 
         System.out.println("\nAvailable Bogie IDs:");
-        for (String id : bogieIds) {
-            System.out.println(id);
-        }
+        for (String id : bogieIds) System.out.println(id);
 
         boolean found = false;
-
         for (String id : bogieIds) {
             if (id.equals(searchId)) {
                 found = true;
@@ -176,12 +151,54 @@ public class TrainConsitentApp {
             }
         }
 
-        if (found) {
+        if (found)
             System.out.println("\nBogie " + searchId + " found in train consist.");
-        } else {
+        else
             System.out.println("\nBogie not found.");
+
+        System.out.println("\nUC18 completed...");
+
+        // =========================
+        // UC19 - Binary Search
+        // =========================
+        System.out.println("\n=================================");
+        System.out.println("UC19 - Binary Search for Bogie ID");
+        System.out.println("=================================");
+
+        String[] ids = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+
+        // Ensure sorted
+        Arrays.sort(ids);
+
+        String key = "BG309";
+
+        System.out.println("\nSorted Bogie IDs:");
+        for (String id : ids) System.out.println(id);
+
+        int low = 0;
+        int high = ids.length - 1;
+        boolean foundBinary = false;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+
+            int compare = ids[mid].compareTo(key);
+
+            if (compare == 0) {
+                foundBinary = true;
+                break;
+            } else if (compare < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
         }
 
-        System.out.println("\nUC18 search completed...");
+        if (foundBinary)
+            System.out.println("\nBogie " + key + " found using Binary Search.");
+        else
+            System.out.println("\nBogie not found.");
+
+        System.out.println("\nUC19 search completed...");
     }
 }
