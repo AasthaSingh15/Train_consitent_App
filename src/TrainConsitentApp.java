@@ -3,7 +3,7 @@ import java.util.stream.Collectors;
 
 public class TrainConsitentApp {
 
-    // Bogie class (used in UC7–UC10)
+    // Bogie class (UC7–UC10)
     static class Bogie {
         String name;
         int capacity;
@@ -11,6 +11,17 @@ public class TrainConsitentApp {
         Bogie(String name, int capacity) {
             this.name = name;
             this.capacity = capacity;
+        }
+    }
+
+    // Goods Bogie class (UC12)
+    static class GoodsBogie {
+        String type;
+        String cargo;
+
+        GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
         }
     }
 
@@ -183,7 +194,7 @@ public class TrainConsitentApp {
         System.out.println("\nUC10 aggregation completed...");
 
         // =========================
-        // UC11 - Regex Validation
+        // UC11 - Regex
         // =========================
         System.out.println("\n=================================");
         System.out.println("UC11 - Validate Train ID and Cargo Code");
@@ -208,5 +219,40 @@ public class TrainConsitentApp {
         System.out.println("Cargo Code Valid: " + isCargoValid);
 
         System.out.println("\nUC11 validation completed...");
+
+        // =========================
+        // UC12 - Safety Check
+        // =========================
+        System.out.println("\n=================================");
+        System.out.println("UC12 - Safety Compliance Check for Goods Bogies");
+        System.out.println("=================================");
+
+        List<GoodsBogie> goodsBogies = new ArrayList<>();
+
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsBogies.add(new GoodsBogie("Open", "Coal"));
+        goodsBogies.add(new GoodsBogie("Box", "Grain"));
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal")); // invalid
+
+        System.out.println("\nGoods Bogies in Train:");
+        for (GoodsBogie g : goodsBogies) {
+            System.out.println(g.type + " -> " + g.cargo);
+        }
+
+        boolean isSafe = goodsBogies.stream()
+                .allMatch(g ->
+                        !g.type.equalsIgnoreCase("Cylindrical")
+                                || g.cargo.equalsIgnoreCase("Petroleum")
+                );
+
+        System.out.println("\nSafety Compliance Status: " + isSafe);
+
+        if (isSafe) {
+            System.out.println("Train formation is SAFE.");
+        } else {
+            System.out.println("Train formation is NOT SAFE.");
+        }
+
+        System.out.println("\nUC12 safety validation completed...");
     }
 }
