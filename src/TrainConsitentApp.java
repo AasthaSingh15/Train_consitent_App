@@ -3,7 +3,7 @@ import java.util.stream.Collectors;
 
 public class TrainConsitentApp {
 
-    // Bogie class (used in UC7, UC8, UC9)
+    // Bogie class (used in UC7–UC10)
     static class Bogie {
         String name;
         int capacity;
@@ -33,7 +33,6 @@ public class TrainConsitentApp {
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
-
         System.out.println("\nPassenger Bogies: " + trainConsist);
 
         // =========================
@@ -43,7 +42,6 @@ public class TrainConsitentApp {
         bogieIds.add("BG101");
         bogieIds.add("BG102");
         bogieIds.add("BG101");
-
         System.out.println("\nUnique Bogie IDs: " + bogieIds);
 
         // =========================
@@ -53,7 +51,6 @@ public class TrainConsitentApp {
         linkedTrain.add("Engine");
         linkedTrain.add("Sleeper");
         linkedTrain.add("Cargo");
-
         System.out.println("\nTrain: " + linkedTrain);
 
         // =========================
@@ -63,7 +60,6 @@ public class TrainConsitentApp {
         formation.add("Engine");
         formation.add("Sleeper");
         formation.add("Guard");
-
         System.out.println("\nFormation: " + formation);
 
         // =========================
@@ -87,7 +83,6 @@ public class TrainConsitentApp {
         System.out.println("=================================");
 
         List<Bogie> bogies = new ArrayList<>();
-
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
         bogies.add(new Bogie("First Class", 24));
@@ -136,7 +131,6 @@ public class TrainConsitentApp {
         System.out.println("=================================");
 
         List<Bogie> bogiesUC9 = new ArrayList<>();
-
         bogiesUC9.add(new Bogie("Sleeper", 72));
         bogiesUC9.add(new Bogie("AC Chair", 56));
         bogiesUC9.add(new Bogie("First Class", 24));
@@ -153,15 +147,66 @@ public class TrainConsitentApp {
                         .collect(Collectors.groupingBy(b -> b.name));
 
         System.out.println("\nGrouped Bogies:");
-
         for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
             System.out.println("\nBogie Type: " + entry.getKey());
-
             for (Bogie b : entry.getValue()) {
                 System.out.println("Capacity -> " + b.capacity);
             }
         }
 
         System.out.println("\nUC9 grouping completed...");
+
+        // =========================
+        // UC10 - Reduce
+        // =========================
+        System.out.println("\n=================================");
+        System.out.println("UC10 - Count Total Seats in Train");
+        System.out.println("=================================");
+
+        List<Bogie> bogiesUC10 = new ArrayList<>();
+        bogiesUC10.add(new Bogie("Sleeper", 72));
+        bogiesUC10.add(new Bogie("AC Chair", 56));
+        bogiesUC10.add(new Bogie("First Class", 24));
+        bogiesUC10.add(new Bogie("Sleeper", 70));
+
+        System.out.println("\nBogies in Train:");
+        for (Bogie b : bogiesUC10) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
+
+        int totalSeats = bogiesUC10.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
+
+        System.out.println("\nTotal Seating Capacity of Train: " + totalSeats);
+
+        System.out.println("\nUC10 aggregation completed...");
+
+        // =========================
+        // UC11 - Regex Validation
+        // =========================
+        System.out.println("\n=================================");
+        System.out.println("UC11 - Validate Train ID and Cargo Code");
+        System.out.println("=================================");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
+
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
+
+        String trainPattern = "TRN-\\d{4}";
+        String cargoPattern = "PET-[A-Z]{2}";
+
+        boolean isTrainValid = trainId.matches(trainPattern);
+        boolean isCargoValid = cargoCode.matches(cargoPattern);
+
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + isTrainValid);
+        System.out.println("Cargo Code Valid: " + isCargoValid);
+
+        System.out.println("\nUC11 validation completed...");
     }
 }
