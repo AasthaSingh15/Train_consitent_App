@@ -6,11 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TrainConsitentApp {
 
-    // ✅ UC7 Inner Class
-    static class Bogie {
+   static class Bogie {
         String name;
         int capacity;
 
@@ -182,5 +182,25 @@ public class TrainConsitentApp {
         }
 
         System.out.println("\nUC7 sorting completed...");
+        System.out.println("\n=================================");
+        System.out.println("UC8 - Filter Passenger Bogies Using Streams");
+        System.out.println("=================================");
+
+        // All bogies
+        System.out.println("\nAll Bogies:");
+        for (Bogie b : bogies) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
+
+        // Filter condition (> 60)
+        List<Bogie> filtered = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        System.out.println("\nFiltered Bogies (Capacity > 60):");
+        for (Bogie b : filtered) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
+
     }
 }
